@@ -1,2 +1,11 @@
-gendiff.js:
-	node bin/gendiff.js -h
+install:
+	npm ci
+	
+gendiff:
+	node bin/gendiff.js
+	
+lint:
+	npx eslint .
+	
+test:
+	npm test
