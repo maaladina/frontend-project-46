@@ -7,7 +7,7 @@ const differenceForKey = (key, file1, file2) => {
     if (file1[key] === file2[key]) {
       return genStr(key, file1[key]);
     }
-    return `${genStr(key, file1[key], '-')}${genStr(key, file2[key], '+')}`;
+    return genStr(key, file1[key], '-') + genStr(key, file2[key], '+');
   } if (Object.hasOwn(file1, key) && !Object.hasOwn(file2, key)) {
     return genStr(key, file1[key], '-');
   }
