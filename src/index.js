@@ -5,7 +5,7 @@ import parse from './parser.js';
 
 const getPath = (file) => path.resolve(process.cwd(), file);
 const readFile = (file) => fs.readFileSync(getPath(file));
-const getfFormat = (filename) => filename.split('.')[1];
+const getfFormat = (filename) => path.extname(filename).slice(1);
 
 const genDiff = (file1, file2) => {
   const data1 = readFile(file1);
