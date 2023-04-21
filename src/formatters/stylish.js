@@ -1,110 +1,49 @@
-#!/usr/bin/env node
-
 import _ from 'lodash';
 
-const try1Stylish = (value, spacesCount = 4) => {
-  if (!_.isArray(value)) {
-    return value;
+const PADDING_STEP = 4;
+const DECORATION_STEP = 2;
+
+const pad = (count) => ' '.repeat(count);
+
+const stringify = (value, spacesCount) => {
+  if (!_.isObject(value)) {
+    return `${value}`;
   }
-  console.log(value);
-  const stylishValue = value.reduce((acc, currentValue) => {
-    if (currentValue.type === 'changed') {
-      const decoratedValue1 = try1Stylish(currentValue.value1);
-      const decoratedValue2 = try1Stylish(currentValue.value2);
-      return `${acc}${' '.repeat(spacesCount - 2)}- ${currentValue.key}: ${decoratedValue1}\n${' '.repeat(spacesCount - 2)}+ ${currentValue.key}: ${decoratedValue2}\n`;
+  const entries = Object.entries(value);
+  const result = entries.reduce((acc, [key, value1]) => `${acc}${pad(spacesCount)}${key}: ${stringify(value1, spacesCount + PADDING_STEP)}\n`, '');
+  return `{\n${result}${pad(spacesCount - 4)}}`;
+};
+
+const ppKeyValue = (key, value, padding, spaces) => `${padding}${key}: ${stringify(value, spaces)}\n`;
+
+const stylish = (diffObj, spacesCount = 4) => {
+  const basePadding = `${pad(spacesCount - DECORATION_STEP)}`;
+  const paddingAdded = `${basePadding}+ `;
+  const paddingDeleted = `${basePadding}- `;
+  const paddingNoChange = pad(spacesCount);
+  const nextLevelSpacesCount = spacesCount + PADDING_STEP;
+
+  const stylishDiff = diffObj.reduce((acc, item) => {
+    switch (item.type) {
+      case 'check':
+        return acc
+          + ppKeyValue(item.key, stylish(item.value, nextLevelSpacesCount), paddingNoChange);
+      case 'deleted':
+        return acc
+          + ppKeyValue(item.key, item.value, paddingDeleted, nextLevelSpacesCount);
+      case 'added':
+        return acc
+          + ppKeyValue(item.key, item.value, paddingAdded, nextLevelSpacesCount);
+      case 'changed':
+        return acc
+          + ppKeyValue(item.key, item.value1, paddingDeleted, nextLevelSpacesCount)
+          + ppKeyValue(item.key, item.value2, paddingAdded, nextLevelSpacesCount);
+      default:
+        return acc
+          + ppKeyValue(item.key, item.value, paddingNoChange);
     }
-    const decoratedValue = try1Stylish(currentValue.value);
-    if (currentValue.type === 'deleted') {
-      return `${acc}${' '.repeat(spacesCount - 2)}- ${currentValue.key}: ${decoratedValue}\n`;
-    }
-    if (currentValue.type === 'added') {
-      return `${acc}${' '.repeat(spacesCount - 2)}+ ${currentValue.key}: ${decoratedValue}\n`;
-    }
-    return `${acc}${' '.repeat(spacesCount)}${currentValue.key}: ${decoratedValue}\n`;
   }, '');
-  return `{\n${stylishValue}${' '.repeat(spacesCount - 4)}}`;
+  return `{\n${stylishDiff}${pad(spacesCount - 4)}}`;
 };
 
-const gendiff = (file1, file2) => {
-  const file = { ...file1, ...file2 };
-  const sortedKeys = _.sortBy(Object.keys(file));
-  const result = sortedKeys.flatMap((key) => {
-    if (!Object.hasOwn(file1, key) && Object.hasOwn(file2, key)) {
-      return { key, value: file2[key], type: 'added' };
-    }
-    if (Object.hasOwn(file1, key) && !Object.hasOwn(file2, key)) {
-      return { key, value: file1[key], type: 'deleted' };
-    }
-    if (_.isObject(file1[key]) && _.isObject(file2[key])) {
-      return { key, value: gendiff(file1[key], file2[key]), type: 'check' };
-    }
-    if (file1[key] === file2[key]) {
-      return { key, value: file1[key], type: 'unchanged' };
-    }
-    return {
-      key, value1: file1[key], value2: file2[key], type: 'changed',
-    };
-  });
-  return result;
-};
-
-const file1 = {
-  common: {
-    setting1: 'Value 1',
-    setting2: 200,
-    setting3: true,
-    setting6: {
-      key: 'value',
-      doge: {
-        wow: '',
-      },
-    },
-  },
-  group1: {
-    baz: 'bas',
-    foo: 'bar',
-    nest: {
-      key: 'value',
-    },
-  },
-  group2: {
-    abc: 12345,
-    deep: {
-      id: 45,
-    },
-  },
-};
-
-const file2 = {
-  common: {
-    follow: false,
-    setting1: 'Value 1',
-    setting3: null,
-    setting4: 'blah blah',
-    setting5: {
-      key5: 'value5',
-    },
-    setting6: {
-      key: 'value',
-      ops: 'vops',
-      doge: {
-        wow: 'so much',
-      },
-    },
-  },
-  group1: {
-    foo: 'bar',
-    baz: 'bars',
-    nest: 'str',
-  },
-  group3: {
-    deep: {
-      id: {
-        number: 45,
-      },
-    },
-    fee: 100500,
-  },
-};
-
-console.log(try1Stylish(gendiff(file1, file2)));
+export default stylish;

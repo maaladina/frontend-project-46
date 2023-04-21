@@ -1,25 +1,26 @@
 import _ from 'lodash';
 
-const genStr = (key, value, sign = ' ') => `  ${sign} ${key}: ${value}\n`;
-
-const differenceForKey = (key, file1, file2) => {
-  if (!Object.hasOwn(file1, key) && Object.hasOwn(file2, key)) {
-    return genStr(key, file2[key], '+');
-  }
-  if (Object.hasOwn(file1, key) && !Object.hasOwn(file2, key)) {
-    return genStr(key, file1[key], '-');
-  }
-  if (file1[key] === file2[key]) {
-    return genStr(key, file1[key]);
-  }
-  return genStr(key, file1[key], '-') + genStr(key, file2[key], '+');
-};
-
-const compare = (file1, file2) => {
-  const file = { ...file1, ...file2 };
-  const sortedKeys = _.sortBy(Object.keys(file));
-  const result = sortedKeys.reduce((acc, key) => acc + differenceForKey(key, file1, file2), '');
-  return `{\n${result}}`;
+const compare = (obj1, obj2) => {
+  const obj = { ...obj1, ...obj2 };
+  const sortedKeys = _.sortBy(Object.keys(obj));
+  const diffObj = sortedKeys.flatMap((key) => {
+    if (Object.hasOwn(obj1, key) && !Object.hasOwn(obj2, key)) {
+      return { key, value: obj1[key], type: 'deleted' };
+    }
+    if (!Object.hasOwn(obj1, key) && Object.hasOwn(obj2, key)) {
+      return { key, value: obj2[key], type: 'added' };
+    }
+    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
+      return { key, value: compare(obj1[key], obj2[key]), type: 'check' };
+    }
+    if (obj1[key] !== obj2[key]) {
+      return {
+        key, value1: obj1[key], value2: obj2[key], type: 'changed',
+      };
+    }
+    return { key, value: obj1[key], type: 'unchanged' };
+  });
+  return diffObj;
 };
 
 export default compare;
