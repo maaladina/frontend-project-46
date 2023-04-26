@@ -40,3 +40,19 @@ test('genDiff .yml plain', () => {
   const result = genDiff(file1, file2, 'plain');
   expect(result.trim()).toEqual(expResult);
 });
+
+test('genDiff .json json', () => {
+  const file1 = getFixturePath('file1.json');
+  const file2 = getFixturePath('file2.json');
+  const expResult = readFile('json_result.txt').trim();
+  const result = genDiff(file1, file2, 'json');
+  expect(result).toEqual(expResult);
+});
+
+test('genDiff .yml json', () => {
+  const file1 = getFixturePath('file1.yml');
+  const file2 = getFixturePath('file2.yml');
+  const expResult = readFile('json_result.txt').trim();
+  const result = genDiff(file1, file2, 'json');
+  expect(result).toEqual(expResult);
+});
