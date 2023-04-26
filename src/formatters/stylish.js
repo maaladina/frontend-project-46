@@ -16,31 +16,36 @@ const stringify = (value, spacesCount) => {
 
 const ppKeyValue = (key, value, padding, spaces) => `${padding}${key}: ${stringify(value, spaces)}\n`;
 
-const stylish = (diffObj, spacesCount = 4) => {
+const getPadding = (spacesCount) => {
   const basePadding = `${pad(spacesCount - DECORATION_STEP)}`;
-  const paddingAdded = `${basePadding}+ `;
-  const paddingDeleted = `${basePadding}- `;
-  const paddingNoChange = pad(spacesCount);
-  const nextLevelSpacesCount = spacesCount + PADDING_STEP;
+  return {
+    added: `${basePadding}+ `,
+    deleted: `${basePadding}- `,
+    noChange: pad(spacesCount),
+    nextLevel: spacesCount + PADDING_STEP,
+  };
+};
 
+const stylish = (diffObj, spacesCount = 4) => {
+  const padding = getPadding(spacesCount);
   const stylishDiff = diffObj.reduce((acc, item) => {
     switch (item.type) {
       case 'check':
         return acc
-          + ppKeyValue(item.key, stylish(item.value, nextLevelSpacesCount), paddingNoChange);
+          + ppKeyValue(item.key, stylish(item.value, padding.nextLevel), padding.noChange);
       case 'deleted':
         return acc
-          + ppKeyValue(item.key, item.value, paddingDeleted, nextLevelSpacesCount);
+          + ppKeyValue(item.key, item.value, padding.deleted, padding.nextLevel);
       case 'added':
         return acc
-          + ppKeyValue(item.key, item.value, paddingAdded, nextLevelSpacesCount);
+          + ppKeyValue(item.key, item.value, padding.added, padding.nextLevel);
       case 'changed':
         return acc
-          + ppKeyValue(item.key, item.value1, paddingDeleted, nextLevelSpacesCount)
-          + ppKeyValue(item.key, item.value2, paddingAdded, nextLevelSpacesCount);
+          + ppKeyValue(item.key, item.value1, padding.deleted, padding.nextLevel)
+          + ppKeyValue(item.key, item.value2, padding.added, padding.nextLevel);
       default:
         return acc
-          + ppKeyValue(item.key, item.value, paddingNoChange);
+          + ppKeyValue(item.key, item.value, padding.noChange);
     }
   }, '');
   return `{\n${stylishDiff}${pad(spacesCount - 4)}}`;
