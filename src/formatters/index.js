@@ -2,17 +2,12 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-const getFormattedResult = (diff, format) => {
-  if (format === 'stylish') {
-    return stylish(diff);
-  }
-  if (format === 'plain') {
-    return plain(diff);
-  }
-  if (format === 'json') {
-    return json(diff);
-  }
-  throw new Error(`unknown format: ${format}`);
+const formats = {
+  stylish,
+  plain,
+  json,
 };
+
+const getFormattedResult = (diff, format) => formats[format](diff);
 
 export default getFormattedResult;
