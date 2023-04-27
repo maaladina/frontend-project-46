@@ -30,7 +30,7 @@ test('genDiff .json plain', () => {
   const file2 = getFixturePath('file2.json');
   const expResult = readFile('plain_result.txt').trim();
   const result = genDiff(file1, file2, 'plain');
-  expect(result.trim()).toEqual(expResult);
+  expect(result).toEqual(expResult);
 });
 
 test('genDiff .yml plain', () => {
@@ -38,7 +38,7 @@ test('genDiff .yml plain', () => {
   const file2 = getFixturePath('file2.yml');
   const expResult = readFile('plain_result.txt').trim();
   const result = genDiff(file1, file2, 'plain');
-  expect(result.trim()).toEqual(expResult);
+  expect(result).toEqual(expResult);
 });
 
 test('genDiff .json json', () => {

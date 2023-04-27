@@ -10,13 +10,13 @@ const getValue = (value) => {
   return value;
 };
 
-const plain = (obj, path = []) => {
+const getPlain = (obj, path = []) => {
   const plainResult = obj.map((item) => {
     const newPath = path.concat(item.key);
     const keyPath = newPath.join('.');
     switch (item.type) {
       case 'check':
-        return `${plain(item.value, newPath)}`;
+        return `${getPlain(item.value, newPath)}`;
       case 'deleted':
         return `Property '${keyPath}' was removed\n`;
       case 'added':
@@ -29,5 +29,7 @@ const plain = (obj, path = []) => {
   }).join('');
   return plainResult;
 };
+
+const plain = (obj) => getPlain(obj).trim();
 
 export default plain;
