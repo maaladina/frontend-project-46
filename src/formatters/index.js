@@ -12,7 +12,7 @@ const getFormattedResult = (diff, format) => {
   if (format === 'json') {
     return json(diff);
   }
-  throw Error(`unknown format: ${format}`);
+  throw new Error(`unknown format: ${format}`);
 };
 
 export default getFormattedResult;
