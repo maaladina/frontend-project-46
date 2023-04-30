@@ -28,27 +28,22 @@ const getPadding = (spacesCount) => {
 
 const stylish = (diffObj, spacesCount = 4) => {
   const padding = getPadding(spacesCount);
-  const stylishDiff = diffObj.reduce((acc, item) => {
+  const stylishDiff = diffObj.map((item) => {
     switch (item.type) {
       case 'nested':
-        return acc
-          + ppKeyValue(item.key, stylish(item.children, padding.nextLevel), padding.noChange);
+        return ppKeyValue(item.key, stylish(item.children, padding.nextLevel), padding.noChange);
       case 'deleted':
-        return acc
-          + ppKeyValue(item.key, item.value, padding.deleted, padding.nextLevel);
+        return ppKeyValue(item.key, item.value, padding.deleted, padding.nextLevel);
       case 'added':
-        return acc
-          + ppKeyValue(item.key, item.value, padding.added, padding.nextLevel);
+        return ppKeyValue(item.key, item.value, padding.added, padding.nextLevel);
       case 'changed':
-        return acc
-          + ppKeyValue(item.key, item.value1, padding.deleted, padding.nextLevel)
+        return ppKeyValue(item.key, item.value1, padding.deleted, padding.nextLevel)
           + ppKeyValue(item.key, item.value2, padding.added, padding.nextLevel);
       default:
-        return acc
-          + ppKeyValue(item.key, item.value, padding.noChange);
+        return ppKeyValue(item.key, item.value, padding.noChange);
     }
-  }, '');
-  return `{\n${stylishDiff}${pad(spacesCount - 4)}}`;
+  });
+  return `{\n${stylishDiff.join('')}${pad(spacesCount - 4)}}`;
 };
 
 export default stylish;
