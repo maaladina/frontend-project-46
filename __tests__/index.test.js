@@ -12,7 +12,7 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 test('genDiff .json', () => {
   const file1 = getFixturePath('file1.json');
   const file2 = getFixturePath('file2.json');
-  const expResult = readFile('expected_file.json').trim();
+  const expResult = readFile('expected_file.txt').trim();
   const result = genDiff(file1, file2, 'stylish');
   expect(result).toEqual(expResult);
 });
@@ -20,7 +20,7 @@ test('genDiff .json', () => {
 test('genDiff .yml', () => {
   const file1 = getFixturePath('file1.yml');
   const file2 = getFixturePath('file2.yml');
-  const expResult = readFile('expected_file.json').trim();
+  const expResult = readFile('expected_file.txt').trim();
   const result = genDiff(file1, file2, 'stylish');
   expect(result).toEqual(expResult);
 });
