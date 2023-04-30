@@ -36,4 +36,4 @@ gendiff <file1> <file2> --format <format>
 ## _Compare JSON/YAML files with plain format_
 [![asciicast](https://asciinema.org/a/TsjN2elykmpHqKcCgmOpTjy31.svg)](https://asciinema.org/a/TsjN2elykmpHqKcCgmOpTjy31)
 ## _Compare JSON/YAML files with JSON format_
-[![asciicast](https://asciinema.org/a/SUgXTRAXUvjYc2RaTdv2nTQ26.svg)](https://asciinema.org/a/SUgXTRAXUvjYc2RaTdv2nTQ26)
+[![asciicast](https://asciinema.org/a/V23IZJoWKIrlxUnf23WEyOJhn.svg)](https://asciinema.org/a/V23IZJoWKIrlxUnf23WEyOJhn)
