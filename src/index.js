@@ -8,13 +8,13 @@ const getPath = (file) => path.resolve(process.cwd(), file);
 const readFile = (file) => fs.readFileSync(getPath(file));
 const getfFormat = (filename) => path.extname(filename).slice(1);
 
-const genDiff = (file1, file2, format = 'stylish') => {
-  const data1 = readFile(file1);
-  const data2 = readFile(file2);
-  const parsedData1 = parse(data1, getfFormat(file1));
-  const parsedData2 = parse(data2, getfFormat(file2));
+const genDiff = (file1Path, file2Path, formatName = 'stylish') => {
+  const data1 = readFile(file1Path);
+  const data2 = readFile(file2Path);
+  const parsedData1 = parse(data1, getfFormat(file1Path));
+  const parsedData2 = parse(data2, getfFormat(file2Path));
   const diff = compare(parsedData1, parsedData2);
-  const result = getFormattedResult(diff, format);
+  const result = getFormattedResult(diff, formatName);
   return result;
 };
 

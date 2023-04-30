@@ -12,10 +12,10 @@ const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8'
 const fileExtensions = ['json', 'yml'];
 
 test.each(fileExtensions)('Compare %s files', (extension) => {
-  const file1 = getFixturePath(`file1.${extension}`);
-  const file2 = getFixturePath(`file2.${extension}`);
-  expect(genDiff(file1, file2)).toEqual(readFile('stylish_result.txt').trim());
-  expect(genDiff(file1, file2, 'stylish')).toEqual(readFile('stylish_result.txt').trim());
-  expect(genDiff(file1, file2, 'plain')).toEqual(readFile('plain_result.txt'));
-  expect(genDiff(file1, file2, 'json')).toEqual(readFile('json_result.txt'));
+  const file1Path = getFixturePath(`file1.${extension}`);
+  const file2Path = getFixturePath(`file2.${extension}`);
+  expect(genDiff(file1Path, file2Path)).toEqual(readFile('stylish_result.txt').trim());
+  expect(genDiff(file1Path, file2Path, 'stylish')).toEqual(readFile('stylish_result.txt').trim());
+  expect(genDiff(file1Path, file2Path, 'plain')).toEqual(readFile('plain_result.txt'));
+  expect(genDiff(file1Path, file2Path, 'json')).toEqual(readFile('json_result.txt'));
 });
