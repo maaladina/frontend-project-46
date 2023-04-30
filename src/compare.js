@@ -11,7 +11,7 @@ const compare = (data1, data2) => {
       return { key, value: data2[key], type: 'added' };
     }
     if (_.isObject(data1[key]) && _.isObject(data2[key])) {
-      return { key, value: compare(data1[key], data2[key]), type: 'check' };
+      return { key, children: compare(data1[key], data2[key]), type: 'nested' };
     }
     if (data1[key] !== data2[key]) {
       return {

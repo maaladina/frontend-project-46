@@ -15,8 +15,8 @@ const getPlain = (obj, path = []) => {
     const newPath = path.concat(item.key);
     const keyPath = newPath.join('.');
     switch (item.type) {
-      case 'check':
-        return `${getPlain(item.value, newPath)}`;
+      case 'nested':
+        return `${getPlain(item.children, newPath)}`;
       case 'deleted':
         return `Property '${keyPath}' was removed\n`;
       case 'added':

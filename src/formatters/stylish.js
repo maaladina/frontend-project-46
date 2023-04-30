@@ -30,9 +30,9 @@ const stylish = (diffObj, spacesCount = 4) => {
   const padding = getPadding(spacesCount);
   const stylishDiff = diffObj.reduce((acc, item) => {
     switch (item.type) {
-      case 'check':
+      case 'nested':
         return acc
-          + ppKeyValue(item.key, stylish(item.value, padding.nextLevel), padding.noChange);
+          + ppKeyValue(item.key, stylish(item.children, padding.nextLevel), padding.noChange);
       case 'deleted':
         return acc
           + ppKeyValue(item.key, item.value, padding.deleted, padding.nextLevel);
