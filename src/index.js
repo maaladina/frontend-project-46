@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import compare from './compare.js';
-import getFormattedResult from './formatters/index.js';
+import format from './formatters/index.js';
 import parse from './parser.js';
 
 const getPath = (file) => path.resolve(process.cwd(), file);
@@ -14,7 +14,7 @@ const genDiff = (file1Path, file2Path, formatName = 'stylish') => {
   const parsedData1 = parse(data1, getType(file1Path));
   const parsedData2 = parse(data2, getType(file2Path));
   const diff = compare(parsedData1, parsedData2);
-  const result = getFormattedResult(diff, formatName);
+  const result = format(diff, formatName);
   return result;
 };
 
