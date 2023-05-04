@@ -10,26 +10,24 @@ const getValue = (value) => {
   return value;
 };
 
-const getPlain = (obj, path = []) => {
-  const plainResult = obj.map((item) => {
+const plain = (obj, path = []) => {
+  const plainResult = obj.flatMap((item) => {
     const newPath = path.concat(item.key);
     const keyPath = newPath.join('.');
     switch (item.type) {
       case 'nested':
-        return `${getPlain(item.children, newPath)}`;
+        return plain(item.children, newPath);
       case 'deleted':
-        return `Property '${keyPath}' was removed\n`;
+        return `Property '${keyPath}' was removed`;
       case 'added':
-        return `Property '${keyPath}' was added with value: ${getValue(item.value)}\n`;
+        return `Property '${keyPath}' was added with value: ${getValue(item.value)}`;
       case 'changed':
-        return `Property '${keyPath}' was updated. From ${getValue(item.value1)} to ${getValue(item.value2)}\n`;
+        return `Property '${keyPath}' was updated. From ${getValue(item.value1)} to ${getValue(item.value2)}`;
       default:
-        return '';
+        return [];
     }
-  }).join('');
+  }).join('\n');
   return plainResult;
 };
-
-const plain = (obj) => getPlain(obj).trim();
 
 export default plain;
