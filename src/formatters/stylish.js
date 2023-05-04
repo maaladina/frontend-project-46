@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 const PADDING_STEP = 4;
 
-const pad = (depth) => ' '.repeat(depth * 4 - 2);
+const pad = (depth) => ' '.repeat(depth * PADDING_STEP - 2);
 
 const stringify = (value, depth) => {
   if (!_.isObject(value)) {
@@ -18,7 +18,7 @@ const stylish = (diff) => {
     const stylishDiff = diffObj.flatMap((item) => {
       switch (item.type) {
         case 'nested':
-          return `${pad(depth)}  ${item.key}: ${stringify(iter(item.children, depth + 1))}`;
+          return `${pad(depth)}  ${item.key}: {\n${iter(item.children, depth + 1).join('\n')}\n${pad(depth)}  }`;
         case 'deleted':
           return `${pad(depth)}- ${item.key}: ${stringify(item.value, depth + 1)}`;
         case 'added':
@@ -32,9 +32,9 @@ const stylish = (diff) => {
           return `${pad(depth)}  ${item.key}: ${stringify(item.value)}`;
       }
     });
-    return `{\n${stylishDiff.join('\n')}\n${' '.repeat((depth - 1) * PADDING_STEP)}}`;
+    return stylishDiff;
   };
-  return iter(diff, 1);
+  return `{\n${iter(diff, 1).join('\n')}\n}`;
 };
 
 export default stylish;
